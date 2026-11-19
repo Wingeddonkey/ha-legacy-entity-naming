@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 DOMAIN = "legacy_entity_naming"
-VERSION = "0.1.0"
+VERSION = "0.1.1"
 
 # Entity registry schema minor versions (major stays 1).
 # 23 = HA 2026.10 and earlier (names stored exactly as typed).

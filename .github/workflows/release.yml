@@ -13,12 +13,29 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: Check tag is a version number
+        run: |
+          if ! [[ "$GITHUB_REF_NAME" =~ ^v?[0-9]+\.[0-9]+\.[0-9]+((a|b|rc|\.dev)[0-9]+)?$ ]]; then
+            echo "::error::Release tag '$GITHUB_REF_NAME' is not a version number. Use a tag like v1.2.3 (or v1.2.3b1). Home Assistant skips integrations whose manifest version is not a valid version."
+            exit 1
+          fi
       - name: Set version from tag
         run: |
           VERSION="${GITHUB_REF_NAME#v}"
           jq --arg v "$VERSION" '.version = $v' custom_components/legacy_entity_naming/manifest.json > m.json
           mv m.json custom_components/legacy_entity_naming/manifest.json
           sed -i "s/^VERSION = .*/VERSION = \"$VERSION\"/" custom_components/legacy_entity_naming/const.py
+      - name: Verify manifest version
+        run: |
+          pip install -q awesomeversion
+          python - <<'EOF'
+          import json
+          from awesomeversion import AwesomeVersion
+          v = json.load(open("custom_components/legacy_entity_naming/manifest.json"))["version"]
+          if not AwesomeVersion(v).valid:
+              raise SystemExit(f"Manifest version {v!r} is not valid")
+          print("manifest version", v)
+          EOF
       - name: Zip
         run: cd custom_components/legacy_entity_naming && zip -r ../../legacy_entity_naming.zip .
       - uses: softprops/action-gh-release@v2

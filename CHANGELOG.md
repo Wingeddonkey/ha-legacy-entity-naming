@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.1.1
+
+- Release workflow refuses tags that are not version numbers (for example `hacs`), and checks the manifest version before building the zip. A 0.1.0 zip built from a bad tag had the version "hacs", so Home Assistant skipped the integration.
+
 ## 0.1.0
 
 First release. Tested against Home Assistant 2026.10.4 and 2026.11.2.
