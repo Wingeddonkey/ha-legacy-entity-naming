@@ -1,0 +1,8 @@
+{
+  "name": "Legacy Entity Naming",
+  "content_in_root": false,
+  "render_readme": true,
+  "zip_release": true,
+  "filename": "legacy_entity_naming.zip",
+  "homeassistant": "2026.10.0"
+}

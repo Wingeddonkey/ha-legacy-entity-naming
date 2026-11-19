@@ -1,0 +1,82 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Legacy Entity Naming",
+        "description": "Keeps entity names exactly as you typed them.\n\nInstalled on 2026.10 or earlier, it stops the 2026.11 update from rewriting your stored names. On 2026.11 and later, the switch turns off adding device and area names in front of your names. Names are snapshotted at every start so they can be restored."
+      }
+    },
+    "abort": {
+      "already_configured": "Legacy Entity Naming is already set up.",
+      "single_instance_allowed": "Legacy Entity Naming is already set up."
+    }
+  },
+  "entity": {
+    "switch": {
+      "legacy_entity_naming": {
+        "name": "Legacy entity naming"
+      }
+    }
+  },
+  "issues": {
+    "names_changed": {
+      "title": "{count} entity names changed during an update",
+      "fix_flow": {
+        "step": {
+          "confirm": {
+            "title": "Restore entity names",
+            "description": "These names changed while Home Assistant was stopped or starting, so an update or migration changed them, not you:\n\n{changes}\n\nSelect **Submit** to put the previous names back."
+          }
+        }
+      }
+    },
+    "unsupported_version": {
+      "title": "Legacy naming display patch is off",
+      "description": "Home Assistant {ha_version} is not supported by this version of Legacy Entity Naming ({reason}). Your stored names are not changed, but dashboards and friendly names now follow Home Assistant's own naming rules until Legacy Entity Naming is updated. Snapshots and the restore action keep working."
+    },
+    "untested_update": {
+      "title": "Wait before updating to Home Assistant {latest}",
+      "description": "Legacy Entity Naming has only been tested with Home Assistant {tested}. Home Assistant {latest} might change entity names in a way it can't prevent. Wait for a Legacy Entity Naming update, or take a backup first. If names do change, they can be restored from the name snapshots."
+    },
+    "shield_failed": {
+      "title": "Upgrade shield could not be armed",
+      "description": "Legacy Entity Naming could not prepare the entity registry on Home Assistant {ha_version}. Do not update to 2026.11 until this is fixed, or the update will rewrite your stored entity names. Check the logs for details."
+    }
+  },
+  "services": {
+    "restore_names": {
+      "name": "Restore entity names",
+      "description": "Writes entity names back from a name snapshot, a core.entity_registry file or a Home Assistant backup.",
+      "fields": {
+        "snapshot_id": {
+          "name": "Snapshot",
+          "description": "Snapshot ID from list_snapshots, or previous_run (default) for the names as they were before this start."
+        },
+        "file": {
+          "name": "File",
+          "description": "Path to a core.entity_registry file or a backup .tar, for example /backup/abc123.tar."
+        },
+        "password": {
+          "name": "Backup encryption key",
+          "description": "Needed only for an encrypted backup."
+        },
+        "entity_id": {
+          "name": "Entities",
+          "description": "Only restore these entities. Leave empty for all."
+        },
+        "dry_run": {
+          "name": "Dry run",
+          "description": "Only list what would change."
+        }
+      }
+    },
+    "take_snapshot": {
+      "name": "Take name snapshot",
+      "description": "Saves a snapshot of all entity names now."
+    },
+    "list_snapshots": {
+      "name": "List name snapshots",
+      "description": "Lists the stored name snapshots and the shield and patch status."
+    }
+  }
+}

@@ -1,0 +1,26 @@
+name: Release
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: write
+
+jobs:
+  zip:
+    name: Attach zip for HACS
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set version from tag
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          jq --arg v "$VERSION" '.version = $v' custom_components/legacy_entity_naming/manifest.json > m.json
+          mv m.json custom_components/legacy_entity_naming/manifest.json
+          sed -i "s/^VERSION = .*/VERSION = \"$VERSION\"/" custom_components/legacy_entity_naming/const.py
+      - name: Zip
+        run: cd custom_components/legacy_entity_naming && zip -r ../../legacy_entity_naming.zip .
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: legacy_entity_naming.zip

@@ -1,0 +1,14 @@
+{
+  "domain": "legacy_entity_naming",
+  "name": "Legacy Entity Naming",
+  "codeowners": ["@Wingeddonkey"],
+  "config_flow": true,
+  "dependencies": ["frontend", "http", "repairs"],
+  "documentation": "https://github.com/Wingeddonkey/ha-legacy-entity-naming",
+  "integration_type": "service",
+  "iot_class": "calculated",
+  "issue_tracker": "https://github.com/Wingeddonkey/ha-legacy-entity-naming/issues",
+  "requirements": [],
+  "single_config_entry": true,
+  "version": "0.1.0"
+}

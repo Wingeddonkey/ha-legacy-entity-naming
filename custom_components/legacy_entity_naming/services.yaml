@@ -1,0 +1,26 @@
+restore_names:
+  fields:
+    snapshot_id:
+      example: previous_run
+      selector:
+        text:
+    file:
+      example: /config/core.entity_registry.pre2026-11
+      selector:
+        text:
+    password:
+      selector:
+        text:
+          type: password
+    entity_id:
+      selector:
+        entity:
+          multiple: true
+    dry_run:
+      default: false
+      selector:
+        boolean:
+
+take_snapshot:
+
+list_snapshots:

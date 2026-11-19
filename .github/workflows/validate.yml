@@ -1,0 +1,55 @@
+name: Validate
+
+on:
+  push:
+  pull_request:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  hacs:
+    name: HACS validation
+    runs-on: ubuntu-latest
+    steps:
+      - uses: hacs/action@main
+        with:
+          category: integration
+          ignore: brands
+
+  hassfest:
+    name: Hassfest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: home-assistant/actions/hassfest@master
+
+  lint:
+    name: Ruff
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/ruff-action@v3
+        with:
+          args: check --select F,E9,B custom_components
+
+  upgrade-test:
+    name: Real HA upgrade test (2026.10 -> 2026.11)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+      - name: Install Home Assistant versions
+        run: |
+          mkdir -p ~/lenha
+          for v in 2026.10.4 2026.11.2; do
+            uv venv -q -p 3.14 ~/lenha/ha-$v
+            VIRTUAL_ENV=~/lenha/ha-$v uv pip install -q "homeassistant==$v" securetar
+          done
+          VIRTUAL_ENV=~/lenha/ha-2026.10.4 uv pip install -q home-assistant-frontend==20260930.5
+          VIRTUAL_ENV=~/lenha/ha-2026.11.2 uv pip install -q home-assistant-frontend==20261028.6
+      - name: Run scenarios
+        run: bash tests/run.sh "$PWD/custom_components/legacy_entity_naming"
